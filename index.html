@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.css" integrity="sha512-x9WwyMYBnlXMNQ6kQ/Lyzu1NqIhLQKL5Oq6xByfXuRj7s9CskyCbLv/1IjqzJmXwFXWr0ov6jBV7Qbc0hh9nHg==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="icon" type="image/x-icon" href="app.ico">
+  <link rel="stylesheet" href="styles.css">
+  <title>Daymark</title>
+</head>
+
+<body>
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">
+        <img src="icon.png" alt="Daymark" width="50" height="50">
+      </div>
+      <span>Daymark</span>
+    </div>
+
+    <nav class="nav">
+      <button class="nav-btn active" data-page="dashboard">Dashboard</button>
+      <button class="nav-btn" data-page="tasks">Tasks</button>
+      <button class="nav-btn" data-page="habits">Habits</button>
+      <button class="nav-btn" data-page="analytics">Analytics</button>
+      <button class="nav-btn" data-page="settings">Settings</button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="downloads/Daymark Setup 1.0.1.exe" class="download-btn" download title="Download Daymark for Windows">
+      <i class="fa-regular fa-circle-down"></i> Download Daymark</a>    
+  </div>
+  </aside>
+
+  <main class="main">
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="page active">
+      <div class="page-header">
+        <div>
+          <h1>Dashboard</h1>
+          <p class="subtitle" id="dashboardGreeting">Today at a glance.</p>
+          <div class="date-label" id="todayLabel"></div>
+        </div>
+        <button class="btn btn-primary" onclick="openTaskModal()">+ Add task</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Today's tasks</div>
+          <div class="stat-value" id="statTasks">0/0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Today's habits</div>
+          <div class="stat-value" id="statHabits">0%</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Tasks tomorrow</div>
+          <div class="stat-value" id="statTomorrow">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Active habits</div>
+          <div class="stat-value" id="statActiveHabits">0</div>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <div class="card">
+          <h2>Today's tasks</h2>
+          <div id="dashboardTasks" class="list"></div>
+        </div>
+
+        <div class="card">
+          <h2>Today's habits</h2>
+          <div id="dashboardHabits" class="list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TASKS -->
+    <section id="tasks" class="page">
+      <div class="page-header">
+        <div>
+          <h1>Tasks</h1>
+          <p class="subtitle">Plan today and tomorrow.</p>
+        </div>
+        <button class="btn btn-primary" onclick="openTaskModal()">+ Add task</button>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-task-filter="today">Today</button>
+        <button class="tab" data-task-filter="tomorrow">Tomorrow</button>
+      </div>
+
+      <div class="card">
+        <div id="taskList" class="list"></div>
+      </div>
+    </section>
+
+    <!-- HABITS -->
+    <section id="habits" class="page">
+      <div class="page-header">
+        <div>
+          <h1>Habits</h1>
+          <p class="subtitle">Daily habits: build something or quit something.</p>
+        </div>
+        <button class="btn btn-primary" onclick="openHabitModal()">+ Add habit</button>
+      </div>
+
+      <div class="card">
+        <h2>Today</h2>
+        <div id="habitList" class="list"></div>
+      </div>
+
+      <div class="card">
+        <h2>Active habits</h2>
+        <div id="allHabitsList" class="list"></div>
+      </div>
+    </section>
+
+    <!-- ANALYTICS -->
+    <section id="analytics" class="page">
+      <div class="page-header">
+        <div>
+          <h1>Analytics</h1>
+          <p class="subtitle">Understand your consistency over time.</p>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-range="today">Today</button>
+        <button class="tab" data-range="7">Last 7 days</button>
+        <button class="tab" data-range="30">Last 30 days</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Task completion</div>
+          <div class="stat-value" id="analyticsTaskRate">0%</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Habit success</div>
+          <div class="stat-value" id="analyticsHabitRate">0%</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Tasks completed</div>
+          <div class="stat-value" id="analyticsTasksDone">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Habit successes</div>
+          <div class="stat-value" id="analyticsHabitDone">0</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Habit performance</h2>
+        <div id="habitAnalytics"></div>
+      </div>
+
+      <div class="card">
+        <h2>Summary</h2>
+        <div class="summary-box" id="analyticsSummary">
+          No data yet.
+        </div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="settings" class="page">
+      <div class="page-header">
+        <div>
+          <h1>Settings</h1>
+          <p class="subtitle">Manage your local data.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Data</h2>
+
+        <div class="setting-row">
+          <div>
+            <strong>Export data</strong>
+            <div class="muted">Save all tasks, habits and history as a JSON file.</div>
+          </div>
+          <button class="btn" onclick="exportData()">Export</button>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <strong>Import data</strong>
+            <div class="muted">Restore data from a FocusFlow JSON backup.</div>
+          </div>
+          <button class="btn" onclick="document.getElementById('importFile').click()">Import</button>
+          <input id="importFile" type="file" accept=".json,application/json" style="display:none">
+        </div>
+      </div>
+
+      <div class="card danger-zone">
+        <h2>Danger zone</h2>
+        <div class="setting-row">
+          <div>
+            <strong>Clear all data</strong>
+            <div class="muted">Permanently remove all local tasks, habits and history.</div>
+          </div>
+          <button class="btn btn-danger" onclick="clearAllData()">Clear data</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Task Modal -->
+<div id="taskModal" class="modal-backdrop">
+  <div class="modal">
+    <h2 id="taskModalTitle">Add task</h2>
+
+    <div class="form-grid">
+      <div class="field full">
+        <label>Task title</label>
+        <input id="taskTitle" maxlength="150" placeholder="e.g. Study CS50">
+      </div>
+
+      <div class="field">
+        <label>Date</label>
+        <select id="taskDate">
+          <option value="today">Today</option>
+          <option value="tomorrow">Tomorrow</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Priority</label>
+        <select id="taskPriority">
+          <option value="normal">Normal</option>
+          <option value="high">High</option>
+          <option value="low">Low</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('taskModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveTask()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Habit Modal -->
+<div id="habitModal" class="modal-backdrop">
+  <div class="modal">
+    <h2 id="habitModalTitle">Add habit</h2>
+
+    <div class="form-grid">
+      <div class="field full">
+        <label>Habit name</label>
+        <input id="habitName" maxlength="100" placeholder="e.g. Read 20 minutes">
+      </div>
+
+      <div class="field full">
+        <label>Type</label>
+        <select id="habitType">
+          <option value="build">Continue / Build</option>
+          <option value="quit">Quit / Avoid</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('habitModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveHabit()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+  /*
+    FocusFlow
+    ----------
+    Beginner-friendly local productivity tracker.
+
+    Data is stored in localStorage under one key.
+    No server, account, or external library is required.
+  */
+
+  const STORAGE_KEY = "focusflow-data-v1";
+
+  let data = loadData();
+  let editingTaskId = null;
+  let editingHabitId = null;
+  let currentTaskFilter = "today";
+  let currentAnalyticsRange = "today";
+
+  function createInitialData() {
+    return {
+      version: 1,
+      tasks: [],
+      habits: [],
+      habitEntries: {}
+    };
+  }
+
+  function loadData() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) return createInitialData();
+
+      const parsed = JSON.parse(saved);
+
+      if (!parsed || !Array.isArray(parsed.tasks) ||
+          !Array.isArray(parsed.habits) ||
+          typeof parsed.habitEntries !== "object") {
+        return createInitialData();
+      }
+
+      return parsed;
+    } catch (error) {
+      console.error("Could not load data:", error);
+      return createInitialData();
+    }
+  }
+
+  function saveData() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  function generateId() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  }
+
+  function dateKey(date = new Date()) {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, "0");
+    const d = String(date.getDate()).padStart(2, "0");
+    return `${y}-${m}-${d}`;
+  }
+
+  function addDays(date, amount) {
+    const result = new Date(date);
+    result.setDate(result.getDate() + amount);
+    return result;
+  }
+
+  function todayKey() {
+    return dateKey(new Date());
+  }
+
+  function tomorrowKey() {
+    return dateKey(addDays(new Date(), 1));
+  }
+
+  function formatDate(key) {
+    const date = new Date(key + "T00:00:00");
+    return date.toLocaleDateString(undefined, {
+      weekday: "short",
+      month: "short",
+      day: "numeric"
+    });
+  }
+
+  function escapeHTML(value) {
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function showToast(message) {
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.classList.add("show");
+
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, 2200);
+  }
+
+  /* ---------- Navigation ---------- */
+
+  document.querySelectorAll(".nav-btn").forEach(button => {
+    button.addEventListener("click", () => {
+      showPage(button.dataset.page);
+    });
+  });
+
+  function showPage(pageId) {
+    document.querySelectorAll(".page").forEach(page => {
+      page.classList.remove("active");
+    });
+
+    document.getElementById(pageId).classList.add("active");
+
+    document.querySelectorAll(".nav-btn").forEach(button => {
+      button.classList.toggle("active", button.dataset.page === pageId);
+    });
+
+    renderAll();
+  }
+
+  /* ---------- Tasks ---------- */
+
+  function openTaskModal(id = null) {
+    editingTaskId = id;
+
+    if (id) {
+      const task = data.tasks.find(t => t.id === id);
+      if (!task) return;
+
+      document.getElementById("taskModalTitle").textContent = "Edit task";
+      document.getElementById("taskTitle").value = task.title;
+      document.getElementById("taskDate").value =
+        task.date === tomorrowKey() ? "tomorrow" : "today";
+      document.getElementById("taskPriority").value = task.priority || "normal";
+    } else {
+      document.getElementById("taskModalTitle").textContent = "Add task";
+      document.getElementById("taskTitle").value = "";
+      document.getElementById("taskDate").value =
+        currentTaskFilter === "tomorrow" ? "tomorrow" : "today";
+      document.getElementById("taskPriority").value = "normal";
+    }
+
+    document.getElementById("taskModal").classList.add("show");
+    setTimeout(() => document.getElementById("taskTitle").focus(), 50);
+  }
+
+  function saveTask() {
+    const title = document.getElementById("taskTitle").value.trim();
+
+    if (!title) {
+      showToast("Enter a task title.");
+      return;
+    }
+
+    const date =
+      document.getElementById("taskDate").value === "tomorrow"
+        ? tomorrowKey()
+        : todayKey();
+
+    const priority = document.getElementById("taskPriority").value;
+
+    if (editingTaskId) {
+      const task = data.tasks.find(t => t.id === editingTaskId);
+      if (task) {
+        task.title = title;
+        task.date = date;
+        task.priority = priority;
+      }
+    } else {
+      data.tasks.push({
+        id: generateId(),
+        title,
+        date,
+        priority,
+        completed: false,
+        createdAt: new Date().toISOString()
+      });
+    }
+
+    saveData();
+    closeModal("taskModal");
+    renderAll();
+    showToast("Task saved.");
+  }
+
+  function toggleTask(id) {
+    const task = data.tasks.find(t => t.id === id);
+    if (!task) return;
+
+    task.completed = !task.completed;
+    task.completedAt = task.completed ? new Date().toISOString() : null;
+
+    saveData();
+    renderAll();
+  }
+
+  function deleteTask(id) {
+    if (!confirm("Delete this task?")) return;
+
+    data.tasks = data.tasks.filter(task => task.id !== id);
+    saveData();
+    renderAll();
+    showToast("Task deleted.");
+  }
+
+  function renderTasks() {
+    const list = document.getElementById("taskList");
+    if (!list) return;
+
+    const wantedDate =
+      currentTaskFilter === "tomorrow" ? tomorrowKey() : todayKey();
+
+    const tasks = data.tasks
+      .filter(task => task.date === wantedDate)
+      .sort((a, b) => Number(a.completed) - Number(b.completed));
+
+    if (!tasks.length) {
+      list.innerHTML = `<div class="empty">No tasks for ${currentTaskFilter}.</div>`;
+      return;
+    }
+
+    list.innerHTML = tasks.map(task => taskHTML(task)).join("");
+  }
+
+  function taskHTML(task) {
+    const priorityText = {
+      high: "High priority",
+      normal: "Normal priority",
+      low: "Low priority"
+    }[task.priority] || "Normal priority";
+
+    return `
+      <div class="item">
+        <input
+          class="check"
+          type="checkbox"
+          ${task.completed ? "checked" : ""}
+          onchange="toggleTask('${task.id}')"
+        >
+
+        <div class="item-main">
+          <div class="item-title ${task.completed ? "done" : ""}">
+            ${escapeHTML(task.title)}
+          </div>
+          <div class="item-meta">${priorityText} · ${formatDate(task.date)}</div>
+        </div>
+
+        <div class="item-actions">
+          <button class="btn btn-small" onclick="openTaskModal('${task.id}')">Edit</button>
+          <button class="btn btn-small btn-danger" onclick="deleteTask('${task.id}')">Delete</button>
+        </div>
+      </div>
+    `;
+  }
+
+  document.querySelectorAll("[data-task-filter]").forEach(button => {
+    button.addEventListener("click", () => {
+      currentTaskFilter = button.dataset.taskFilter;
+
+      document.querySelectorAll("[data-task-filter]").forEach(b => {
+        b.classList.toggle("active", b === button);
+      });
+
+      renderTasks();
+    });
+  });
+
+  /* ---------- Habits ---------- */
+
+  function openHabitModal(id = null) {
+    editingHabitId = id;
+
+    if (id) {
+      const habit = data.habits.find(h => h.id === id);
+      if (!habit) return;
+
+      document.getElementById("habitModalTitle").textContent = "Edit habit";
+      document.getElementById("habitName").value = habit.name;
+      document.getElementById("habitType").value = habit.type;
+    } else {
+      document.getElementById("habitModalTitle").textContent = "Add habit";
+      document.getElementById("habitName").value = "";
+      document.getElementById("habitType").value = "build";
+    }
+
+    document.getElementById("habitModal").classList.add("show");
+    setTimeout(() => document.getElementById("habitName").focus(), 50);
+  }
+
+  function saveHabit() {
+    const name = document.getElementById("habitName").value.trim();
+
+    if (!name) {
+      showToast("Enter a habit name.");
+      return;
+    }
+
+    const type = document.getElementById("habitType").value;
+
+    if (editingHabitId) {
+      const habit = data.habits.find(h => h.id === editingHabitId);
+      if (habit) {
+        habit.name = name;
+        habit.type = type;
+      }
+    } else {
+      data.habits.push({
+        id: generateId(),
+        name,
+        type,
+        active: true,
+        createdAt: todayKey()
+      });
+    }
+
+    saveData();
+    closeModal("habitModal");
+    renderAll();
+    showToast("Habit saved.");
+  }
+
+  function getHabitStatus(habitId, day = todayKey()) {
+    return data.habitEntries[habitId]?.[day] || null;
+  }
+
+  function setHabitStatus(habitId, status) {
+    if (!data.habitEntries[habitId]) {
+      data.habitEntries[habitId] = {};
+    }
+
+    const oldStatus = data.habitEntries[habitId][todayKey()];
+
+    if (oldStatus === status) {
+      delete data.habitEntries[habitId][todayKey()];
+    } else {
+      data.habitEntries[habitId][todayKey()] = status;
+    }
+
+    saveData();
+    renderAll();
+  }
+
+  function deleteHabit(id) {
+    if (!confirm("Delete this habit and its history?")) return;
+
+    data.habits = data.habits.filter(habit => habit.id !== id);
+    delete data.habitEntries[id];
+
+    saveData();
+    renderAll();
+    showToast("Habit deleted.");
+  }
+
+  function renderHabits() {
+    const list = document.getElementById("habitList");
+    const allList = document.getElementById("allHabitsList");
+
+    if (!list || !allList) return;
+
+    const activeHabits = data.habits.filter(h => h.active);
+
+    if (!activeHabits.length) {
+      list.innerHTML = `<div class="empty">No habits yet.</div>`;
+      allList.innerHTML = `<div class="empty">Create your first daily habit.</div>`;
+      return;
+    }
+
+    list.innerHTML = activeHabits.map(habit => habitHTML(habit)).join("");
+
+    allList.innerHTML = activeHabits.map(habit => `
+      <div class="item">
+        <div class="item-main">
+          <div class="item-title">${escapeHTML(habit.name)}</div>
+          <div class="item-meta">
+            ${habit.type === "build" ? "Continue / Build" : "Quit / Avoid"} · Daily
+          </div>
+        </div>
+
+        <div class="item-actions">
+          <button class="btn btn-small" onclick="openHabitModal('${habit.id}')">Edit</button>
+          <button class="btn btn-small btn-danger" onclick="deleteHabit('${habit.id}')">Delete</button>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function habitHTML(habit) {
+    const status = getHabitStatus(habit.id);
+
+    const isBuild = habit.type === "build";
+
+    let statusText = "Not recorded";
+    let statusClass = "";
+
+    if (status === "success") {
+      statusText = isBuild ? "Completed" : "Stayed away";
+      statusClass = "success";
+    }
+
+    if (status === "fail") {
+      statusText = isBuild ? "Missed" : "Broke";
+      statusClass = "fail";
+    }
+
+    return `
+      <div class="habit-item">
+        <div class="habit-icon">${isBuild ? "✓" : "×"}</div>
+
+        <div class="item-main">
+          <div class="item-title">${escapeHTML(habit.name)}</div>
+          <div class="item-meta">
+            ${isBuild ? "Continue / Build" : "Quit / Avoid"} · ${statusText}
+          </div>
+        </div>
+
+        <button
+          class="habit-status ${statusClass}"
+          onclick="cycleHabit('${habit.id}')"
+          title="Click to change today's status"
+        >
+          ${statusText}
+        </button>
+      </div>
+    `;
+  }
+
+  function cycleHabit(habitId) {
+    const current = getHabitStatus(habitId);
+
+    if (!current) {
+      setHabitStatus(habitId, "success");
+    } else if (current === "success") {
+      setHabitStatus(habitId, "fail");
+    } else {
+      setHabitStatus(habitId, null);
+    }
+  }
+
+  /* ---------- Analytics ---------- */
+
+  function getDateRange(days) {
+    const end = new Date();
+    end.setHours(0, 0, 0, 0);
+
+    if (days === 1) {
+      return [dateKey(end), dateKey(end)];
+    }
+
+    const start = addDays(end, -(days - 1));
+    return [dateKey(start), dateKey(end)];
+  }
+
+  function dateKeysBetween(startKey, endKey) {
+    const result = [];
+    let current = new Date(startKey + "T00:00:00");
+    const end = new Date(endKey + "T00:00:00");
+
+    while (current <= end) {
+      result.push(dateKey(current));
+      current = addDays(current, 1);
+    }
+
+    return result;
+  }
+
+  function calculateAnalytics(days) {
+    const [start, end] = getDateRange(days);
+    const keys = dateKeysBetween(start, end);
+
+    const tasks = data.tasks.filter(task =>
+      task.date >= start && task.date <= end
+    );
+
+    const completedTasks = tasks.filter(task => task.completed).length;
+    const taskRate = tasks.length
+      ? Math.round((completedTasks / tasks.length) * 100)
+      : 0;
+
+    let possibleHabitDays = 0;
+    let successfulHabitDays = 0;
+
+    const habitStats = data.habits
+      .filter(h => h.active)
+      .map(habit => {
+        let possible = 0;
+        let successful = 0;
+
+        keys.forEach(day => {
+          possible++;
+          if (getHabitStatus(habit.id, day) === "success") {
+            successful++;
+          }
+        });
+
+        return {
+          habit,
+          possible,
+          successful,
+          rate: possible ? Math.round((successful / possible) * 100) : 0
+        };
+      });
+
+    habitStats.forEach(stat => {
+      possibleHabitDays += stat.possible;
+      successfulHabitDays += stat.successful;
+    });
+
+    const habitRate = possibleHabitDays
+      ? Math.round((successfulHabitDays / possibleHabitDays) * 100)
+      : 0;
+
+    return {
+      start,
+      end,
+      tasks: tasks.length,
+      completedTasks,
+      taskRate,
+      successfulHabitDays,
+      possibleHabitDays,
+      habitRate,
+      habitStats
+    };
+  }
+
+  function renderAnalytics() {
+    const days =
+      currentAnalyticsRange === "today"
+        ? 1
+        : Number(currentAnalyticsRange);
+
+    const stats = calculateAnalytics(days);
+
+    document.getElementById("analyticsTaskRate").textContent = stats.taskRate + "%";
+    document.getElementById("analyticsHabitRate").textContent = stats.habitRate + "%";
+    document.getElementById("analyticsTasksDone").textContent =
+      `${stats.completedTasks}/${stats.tasks}`;
+    document.getElementById("analyticsHabitDone").textContent =
+      `${stats.successfulHabitDays}/${stats.possibleHabitDays}`;
+
+    const container = document.getElementById("habitAnalytics");
+
+    if (!stats.habitStats.length) {
+      container.innerHTML = `<div class="empty">No active habits to analyze.</div>`;
+    } else {
+      container.innerHTML = stats.habitStats.map(stat => `
+        <div class="progress-row">
+          <div title="${escapeHTML(stat.habit.name)}">
+            ${escapeHTML(stat.habit.name)}
+          </div>
+          <div class="progress-bg">
+            <div class="progress-fill" style="width:${stat.rate}%"></div>
+          </div>
+          <div>${stat.rate}%</div>
+        </div>
+      `).join("");
+    }
+
+    document.getElementById("analyticsSummary").textContent =
+      createSummary(stats);
+  }
+
+  function createSummary(stats) {
+    if (!stats.tasks && !stats.possibleHabitDays) {
+      return "There is not enough data for this period yet.";
+    }
+
+    const parts = [];
+
+    if (stats.tasks) {
+      parts.push(
+        `You completed ${stats.completedTasks} of ${stats.tasks} tasks (${stats.taskRate}%).`
+      );
+    }
+
+    if (stats.possibleHabitDays) {
+      parts.push(
+        `Your habits had ${stats.habitRate}% success across the selected period.`
+      );
+    }
+
+    const strongest = [...stats.habitStats]
+      .sort((a, b) => b.rate - a.rate)[0];
+
+    if (strongest) {
+      parts.push(
+        `Your highest-performing habit was "${strongest.habit.name}" at ${strongest.rate}%.`
+      );
+    }
+
+    return parts.join(" ");
+  }
+
+  document.querySelectorAll("[data-range]").forEach(button => {
+    button.addEventListener("click", () => {
+      currentAnalyticsRange = button.dataset.range;
+
+      document.querySelectorAll("[data-range]").forEach(b => {
+        b.classList.toggle("active", b === button);
+      });
+
+      renderAnalytics();
+    });
+  });
+
+  /* ---------- Dashboard ---------- */
+
+  function renderDashboard() {
+    const today = todayKey();
+    const tomorrow = tomorrowKey();
+
+    const todayTasks = data.tasks.filter(t => t.date === today);
+    const tomorrowTasks = data.tasks.filter(t => t.date === tomorrow);
+    const completedToday = todayTasks.filter(t => t.completed).length;
+
+    const activeHabits = data.habits.filter(h => h.active);
+
+    let successful = 0;
+
+    activeHabits.forEach(habit => {
+      if (getHabitStatus(habit.id) === "success") successful++;
+    });
+
+    const habitRate = activeHabits.length
+      ? Math.round((successful / activeHabits.length) * 100)
+      : 0;
+
+    document.getElementById("statTasks").textContent =
+      `${completedToday}/${todayTasks.length}`;
+
+    document.getElementById("statHabits").textContent =
+      habitRate + "%";
+
+    document.getElementById("statTomorrow").textContent =
+      tomorrowTasks.length;
+
+    document.getElementById("statActiveHabits").textContent =
+      activeHabits.length;
+
+    document.getElementById("todayLabel").textContent =
+      new Date().toLocaleDateString(undefined, {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      });
+
+    const dashboardTasks = document.getElementById("dashboardTasks");
+
+    dashboardTasks.innerHTML = todayTasks.length
+      ? todayTasks.map(task => taskHTML(task)).join("")
+      : `<div class="empty">Nothing planned for today.</div>`;
+
+    const dashboardHabits = document.getElementById("dashboardHabits");
+
+    dashboardHabits.innerHTML = activeHabits.length
+      ? activeHabits.map(habit => habitHTML(habit)).join("")
+      : `<div class="empty">No habits yet.</div>`;
+
+    const hour = new Date().getHours();
+    const greeting =
+      hour < 12 ? "Good morning." :
+      hour < 18 ? "Good afternoon." :
+      "Good evening.";
+
+    document.getElementById("dashboardGreeting").textContent =
+      greeting + " Here's your day at a glance.";
+  }
+
+  /* ---------- Import / Export ---------- */
+
+  function exportData() {
+    const backup = {
+      ...data,
+      exportedAt: new Date().toISOString(),
+      app: "FocusFlow",
+      formatVersion: 1
+    };
+
+    const blob = new Blob(
+      [JSON.stringify(backup, null, 2)],
+      { type: "application/json" }
+    );
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = `focusflow-backup-${todayKey()}.json`;
+    link.click();
+
+    URL.revokeObjectURL(url);
+    showToast("Backup exported.");
+  }
+
+  document.getElementById("importFile").addEventListener("change", event => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      try {
+        const imported = JSON.parse(reader.result);
+
+        if (
+          !imported ||
+          !Array.isArray(imported.tasks) ||
+          !Array.isArray(imported.habits) ||
+          typeof imported.habitEntries !== "object"
+        ) {
+          throw new Error("Invalid backup");
+        }
+
+        if (!confirm("Import this backup? Current local data will be replaced.")) {
+          event.target.value = "";
+          return;
+        }
+
+        data = {
+          version: 1,
+          tasks: imported.tasks,
+          habits: imported.habits,
+          habitEntries: imported.habitEntries
+        };
+
+        saveData();
+        renderAll();
+        showToast("Backup imported.");
+      } catch (error) {
+        alert("This file is not a valid FocusFlow backup.");
+      }
+
+      event.target.value = "";
+    };
+
+    reader.readAsText(file);
+  });
+
+  function clearAllData() {
+    const first = confirm(
+      "This will delete ALL tasks, habits and history. Continue?"
+    );
+
+    if (!first) return;
+
+    const second = confirm("Are you absolutely sure?");
+    if (!second) return;
+
+    data = createInitialData();
+    saveData();
+    renderAll();
+    showToast("All data cleared.");
+  }
+
+  /* ---------- Modal ---------- */
+
+  function closeModal(id) {
+    document.getElementById(id).classList.remove("show");
+    editingTaskId = null;
+    editingHabitId = null;
+  }
+
+  document.querySelectorAll(".modal-backdrop").forEach(backdrop => {
+    backdrop.addEventListener("click", event => {
+      if (event.target === backdrop) {
+        backdrop.classList.remove("show");
+        editingTaskId = null;
+        editingHabitId = null;
+      }
+    });
+  });
+
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") {
+      document.querySelectorAll(".modal-backdrop").forEach(modal => {
+        modal.classList.remove("show");
+      });
+      editingTaskId = null;
+      editingHabitId = null;
+    }
+  });
+
+  /* ---------- Render ---------- */
+
+  function renderAll() {
+    renderDashboard();
+    renderTasks();
+    renderHabits();
+    renderAnalytics();
+  }
+
+  renderAll();
+</script>
+</body>
+</html>
